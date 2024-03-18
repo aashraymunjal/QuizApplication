@@ -1,0 +1,13 @@
+versin: 0.2
+phases: 
+ build:
+  commands:
+   - echo Entered build phase
+   - mvn clean package
+post_build: 
+ commands:
+   - echo Build completed successfully 
+artifacts:
+ files:
+   - target/quiz-application. jar
+ discard-paths: yes
