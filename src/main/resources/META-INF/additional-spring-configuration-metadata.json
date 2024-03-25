@@ -1,0 +1,17 @@
+{"properties": [
+  {
+    "name": "jpa.properties.hibernate.dialect",
+    "type": "java.lang.String",
+    "description": "A description for 'jpa.properties.hibernate.dialect'"
+  },
+  {
+    "name": "jpa.properties.show-sql",
+    "type": "java.lang.String",
+    "description": "A description for 'jpa.properties.show-sql'"
+  },
+  {
+    "name": "jpa.hibernate.ddl-auto",
+    "type": "java.lang.String",
+    "description": "A description for 'jpa.hibernate.ddl-auto'"
+  }
+]}
