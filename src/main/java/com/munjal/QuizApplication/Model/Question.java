@@ -34,6 +34,23 @@ public class Question {
 
 
 
+	public Question() {
+		super();
+	}
+
+	public Question(String questionTitle, String option1, String option2, String option3, String option4,
+			String rightAnswer, String difficulty_level, String category) {
+		super();
+		this.questionTitle = questionTitle;
+		this.option1 = option1;
+		this.option2 = option2;
+		this.option3 = option3;
+		this.option4 = option4;
+		this.rightAnswer = rightAnswer;
+		this.difficulty_level = difficulty_level;
+		this.category = category;
+	}
+
 	public String getCategory() {
 		return category;
 	}
