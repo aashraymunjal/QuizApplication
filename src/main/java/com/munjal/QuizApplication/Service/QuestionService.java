@@ -61,7 +61,7 @@ public class QuestionService {
 		try {
 			if (id > 0 && questionDao.findById(id).isPresent()) {
 				questionDao.deleteById(id);
-				return new ResponseEntity<>("Deleted id: " + id, HttpStatus.OK);
+				return new ResponseEntity<>("Deleted id: " +id, HttpStatus.OK);
 			} else {
 				return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Question not present in DB!");
 			}
