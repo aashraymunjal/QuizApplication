@@ -1,6 +1,9 @@
 package com.munjal.QuizApplication.Controller;
 
+import java.io.IOException;
 import java.util.List;
+
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,9 +19,18 @@ import org.springframework.web.bind.annotation.RestController;
 import com.munjal.QuizApplication.Model.Question;
 import com.munjal.QuizApplication.Service.QuestionService;
 
+
+import springfox.documentation.annotations.ApiIgnore;
+
 @RestController
-@RequestMapping("question")
+//@RequestMapping("question")
 public class QuestionController {
+
+	@ApiIgnore
+	@RequestMapping(value = "/")
+	public void redirect(HttpServletResponse response) throws IOException {
+		response.sendRedirect("/swagger-ui.html");
+	}
 
 	@Autowired
 	private QuestionService questionService;

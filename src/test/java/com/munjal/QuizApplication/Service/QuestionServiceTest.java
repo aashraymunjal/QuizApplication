@@ -22,7 +22,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 
 import com.munjal.QuizApplication.Dao.QuestionDao;
@@ -129,7 +128,7 @@ class QuestionServiceTest {
 		doNothing().when(dao).deleteById(1);
 		ResponseEntity<String> rs = service.delete(id);
 		Assertions.assertEquals(rs.getBody(), "Deleted id: " + id);
-		Assertions.assertEquals(rs.getStatusCode(), HttpStatusCode.valueOf(200));
+		Assertions.assertEquals(rs.getStatusCode(), HttpStatus.valueOf(200));
 	}
 
 	@Test
@@ -141,7 +140,7 @@ class QuestionServiceTest {
 		question.setId(id);
 		ResponseEntity<String> rs = service.delete(id);
 		Assertions.assertEquals(rs.getBody(), "Question not present in DB!");
-		Assertions.assertEquals(rs.getStatusCode(), HttpStatusCode.valueOf(204));
+		Assertions.assertEquals(rs.getStatusCode(), HttpStatus.valueOf(204));
 	}
 
 	@Test
@@ -153,12 +152,13 @@ class QuestionServiceTest {
 		Question newquestion = new Question();
 		newquestion.setCategory("Python");
 		newquestion.setId(1);
-		
+
 		Mockito.when(dao.findById(Mockito.any())).thenReturn(Optional.ofNullable(oldquestion));
 		Mockito.when(dao.save(Mockito.any())).thenReturn(newquestion);
 		ResponseEntity<Question> rs = service.updateQuestion(1, newquestion);
 		Assertions.assertEquals(rs.getBody().getCategory(), newquestion.getCategory());
 	}
+
 	@Test
 	@DisplayName("Testing updateQuestion")
 	void testUpdateQuestionFail() {
@@ -170,7 +170,7 @@ class QuestionServiceTest {
 		newquestion.setId(1);
 		ResponseEntity<Question> rs = service.updateQuestion(1, newquestion);
 		System.out.println(rs.getBody());
-		Assertions.assertEquals(rs.getStatusCode(),HttpStatusCode.valueOf(204));
+		Assertions.assertEquals(rs.getStatusCode(), HttpStatus.valueOf(204));
 	}
 
 }
