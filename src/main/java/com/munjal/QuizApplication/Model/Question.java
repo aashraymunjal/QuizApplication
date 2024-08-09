@@ -1,4 +1,4 @@
-package com.munjal.QuizApplication.Model;
+package com.example.demo.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -8,71 +8,49 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table
+@Table(name = "question")
 public class Question {
 
 	@Id
-	@Column
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	/*
+	 * Auto - sab apne aap hoga postgres use sequence so in our case it is sequence
+	 * when we write auto.
+	 * 
+	 */
 	private Integer id;
-	@Column
-	private String questionTitle;
-	@Column
+	@Column(name = "question_title")
+	private String question_title;
+	@Column(name = "option1")
 	private String option1;
-	@Column
+	@Column(name = "option2")
 	private String option2;
-	@Column
+	@Column(name = "option3")
 	private String option3;
-	@Column
+	@Column(name = "option4")
 	private String option4;
-	@Column
-	private String rightAnswer;
-	@Column
+	@Column(name = "right_answer")
+	private String right_answer;
+	@Column(name = "difficulty_level")
 	private String difficulty_level;
-	@Column
+	@Column(name = "category")
 	private String category;
-
-
-
-	public Question() {
-		super();
-	}
-
-	public Question(String questionTitle, String option1, String option2, String option3, String option4,
-			String rightAnswer, String difficulty_level, String category) {
-		super();
-		this.questionTitle = questionTitle;
-		this.option1 = option1;
-		this.option2 = option2;
-		this.option3 = option3;
-		this.option4 = option4;
-		this.rightAnswer = rightAnswer;
-		this.difficulty_level = difficulty_level;
-		this.category = category;
-	}
-
-	public String getCategory() {
-		return category;
-	}
-
-	public void setCategory(String category) {
-		this.category = category;
-	}
 
 	public Integer getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
-	public String getQuestionTitle() {
-		return questionTitle;
+	public String getQuestion_title() {
+		return question_title;
 	}
 
-	public void setQuestionTitle(String questionTitle) {
-		this.questionTitle = questionTitle;
+	public void setQuestion_title(String question_title) {
+		this.question_title = question_title;
 	}
 
 	public String getOption1() {
@@ -107,12 +85,12 @@ public class Question {
 		this.option4 = option4;
 	}
 
-	public String getRightAnswer() {
-		return rightAnswer;
+	public String getRight_answer() {
+		return right_answer;
 	}
 
-	public void setRightAnswer(String rightAnswer) {
-		this.rightAnswer = rightAnswer;
+	public void setRight_answer(String right_answer) {
+		this.right_answer = right_answer;
 	}
 
 	public String getDifficulty_level() {
@@ -123,20 +101,19 @@ public class Question {
 		this.difficulty_level = difficulty_level;
 	}
 
-	@Override
-	public String toString() {
-		return "Question [id=" + id + ", questionTitle=" + questionTitle + ", option1=" + option1 + ", option2="
-				+ option2 + ", option3=" + option3 + ", option4=" + option4 + ", rightAnswer=" + rightAnswer
-				+ ", difficulty_level=" + difficulty_level + ", category=" + category + "]";
+	public String getCategory() {
+		return category;
 	}
 
+	public void setCategory(String category) {
+		this.category = category;
+	}
 
-	
-
-
-
-
-
-
+	@Override
+	public String toString() {
+		return "Question [id=" + id + ", question_title=" + question_title + ", option1=" + option1 + ", option2="
+				+ option2 + ", option3=" + option3 + ", option4=" + option4 + ", right_answer=" + right_answer
+				+ ", difficulty_level=" + difficulty_level + ", category=" + category + "]";
+	}
 
 }
