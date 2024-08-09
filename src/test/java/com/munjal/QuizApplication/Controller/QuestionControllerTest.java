@@ -25,86 +25,148 @@ class QuestionControllerTest {
 	QuestionController controller;
 
 	@Mock
-	private QuestionService service;
+	QuestionService service;
 
+	@DisplayName("Test get all questions")
 	@Test
-	@DisplayName("Test Getting All Questions")
-	void testGetAllQuestions() {
-		List<Question> savedList = new ArrayList<>();
-
+	void testGetAllQuestionsNotNull() {
 		Question q1 = new Question();
 		q1.setCategory("Java");
-		Question q2 = new Question();
-		q2.setCategory("Python");
+		List<Question> list = new ArrayList<>();
+		list.add(q1);
 
-		savedList.add(q1);
-		savedList.add(q2);
-		ResponseEntity<List<Question>> savedRs = new ResponseEntity<>(savedList, HttpStatus.OK);
-
-		Mockito.when(service.getAllQuestions()).thenReturn(savedRs);
-
-		ResponseEntity<List<Question>> list = controller.getAllQuestions();
-		Assertions.assertEquals(list.getBody().get(0).getCategory(), q1.getCategory());
-		Assertions.assertEquals(list.getBody().get(1).getCategory(), q2.getCategory());
+		Mockito.when(service.getAllQuestions()).thenReturn(list);
+		ResponseEntity<List<Question>> res = controller.getAllQuestions();
+		Assertions.assertNotNull(res);
+		Assertions.assertEquals(res.getBody().get(0).getCategory(), q1.getCategory());
+		Assertions.assertEquals(HttpStatus.OK, res.getStatusCode());
 	}
 
+	@DisplayName("Test get all questions NULL")
 	@Test
-	@DisplayName("Test Getting Questions by category")
-	void testGetQuestionsByCategory() {
-		List<Question> savedList = new ArrayList<>();
-		String category = "Java";
-
+	void testGetAllQuestionsNull() {
 		Question q1 = new Question();
 		q1.setCategory("Java");
+		List<Question> list = new ArrayList<>();
+
+		Mockito.when(service.getAllQuestions()).thenReturn(list);
+		ResponseEntity<List<Question>> res = controller.getAllQuestions();
+		Assertions.assertNull(res.getBody());
+		Assertions.assertEquals(HttpStatus.NOT_FOUND, res.getStatusCode());
+
+	}
+
+	@DisplayName("Saving question success")
+	@Test
+	void savedQuestion() {
+		Question q1 = new Question();
+		q1.setCategory("java");
+		Mockito.when(service.adQuestion(q1)).thenReturn(q1);
+		ResponseEntity<Question> res = controller.addQuestion(q1);
+		Assertions.assertEquals(HttpStatus.CREATED, res.getStatusCode());
+		Assertions.assertNotNull(res.getBody());
+
+	}
+
+	@DisplayName("Saving question Fails")
+	@Test
+	void savedQuestionFails() {
+		Question q1 = null;
+		ResponseEntity<Question> res = controller.addQuestion(q1);
+		Assertions.assertNull(res.getBody());
+
+	}
+
+	@DisplayName("Test fetch list by category")
+	@Test
+	void testfetchbyCat() {
+		Question q1 = new Question();
+		q1.setCategory("java");
 		Question q2 = new Question();
-		q2.setCategory("Python");
+		q2.setCategory("java");
 
-		savedList.add(q1);
-		savedList.add(q2);
-		ResponseEntity<List<Question>> savedRs = new ResponseEntity<>(savedList, HttpStatus.OK);
-		Mockito.when(service.getQuestionsByCategory(category)).thenReturn(savedRs);
-		ResponseEntity<List<Question>> list = controller.getQuestionsByCategory(category);
-		Assertions.assertNotNull(list);
-		Assertions.assertEquals(list.getBody().size(), 2);
-		Assertions.assertEquals(list.getBody().get(0).getCategory(), category);
+		List<Question> list = new ArrayList<>();
+		list.add(q2);
+		list.add(q1);
+		String category = "java";
+		Mockito.when(service.getQuestionByCat(category)).thenReturn(list);
+		ResponseEntity<List<Question>> res = controller.getQuestionByCat(category);
+		Assertions.assertEquals(res.getBody().get(0).getCategory(), category);
+		Assertions.assertEquals(HttpStatus.OK, res.getStatusCode());
+
 	}
 
+	@DisplayName("Test fetch list by category")
 	@Test
-	@DisplayName("Test to add question functionality")
-	void testAddQuestion() {
-		Question inputQ = new Question();
-		inputQ.setCategory("Java");
-		ResponseEntity<String> savedRs = new ResponseEntity<>("saved", HttpStatus.OK);
-		Mockito.when(service.addQuestion(inputQ)).thenReturn(savedRs);
-		ResponseEntity<String> rs = controller.addQuestion(inputQ);
-		Assertions.assertNotNull(rs.getBody());
-		Assertions.assertEquals(rs.getBody(), "saved");
+	void testfetchbyCatEmpty() {
+		Question q1 = new Question();
+		q1.setCategory("java");
+		Question q2 = new Question();
+		q2.setCategory("java");
+
+		List<Question> list = new ArrayList<>();
+
+		String category = "java";
+		Mockito.when(service.getQuestionByCat(category)).thenReturn(list);
+		ResponseEntity<List<Question>> res = controller.getQuestionByCat(category);
+		Assertions.assertEquals(HttpStatus.OK, res.getStatusCode());
 
 	}
 
+	@DisplayName("Test Deletion by ID success")
 	@Test
-	@DisplayName("Testing Delete functionality")
-	void testDelete() {
-		int id = 1;
-		ResponseEntity<String> deletedrs = new ResponseEntity<>("Deleted", HttpStatus.OK);
-		Mockito.when(service.delete(id)).thenReturn(deletedrs);
-		ResponseEntity<String> rs = controller.delete(id);
-		Assertions.assertEquals(rs.getBody(), "Deleted");
+	void testDeleteSuccess() {
+		Question q1 = new Question();
+		q1.setId(10);
+		int id = 10;
+		Mockito.when(service.deletebyid(id)).thenReturn("Deleted");
+		ResponseEntity<String> res = controller.deleteById(id);
+		Assertions.assertEquals(HttpStatus.OK, res.getStatusCode());
+
 	}
-	
+
+	@DisplayName("Test Deletion by ID fail")
 	@Test
-	@DisplayName("Testing update Question by id")
-	void testUpdateQuestion() {
-		int id=1;
-		
-		Question updatedQuestion = new Question();
-		updatedQuestion.setId(1);
-		updatedQuestion.setCategory("Java");
-		ResponseEntity<Question> updatedrs = new ResponseEntity<>(updatedQuestion,HttpStatus.OK);
-		Mockito.when(service.updateQuestion(id, updatedQuestion)).thenReturn(updatedrs);
-		ResponseEntity<Question> rs = controller.updateQuestion(id, updatedQuestion);
-		Assertions.assertNotNull(rs);
-		Assertions.assertEquals(rs.getBody().getCategory(),"Java");
+	void testDeleteFail() {
+		Question q1 = new Question();
+		q1.setId(10);
+		int id = 10;
+		Mockito.when(service.deletebyid(id)).thenReturn("Not found");
+		ResponseEntity<String> res = controller.deleteById(id);
+		Assertions.assertEquals(HttpStatus.NOT_FOUND, res.getStatusCode());
+
 	}
-	
+
+	@DisplayName("Test updation by ID and question")
+	@Test
+	void testUpdationByIdQuestion() {
+		Question q1 = new Question();
+		q1.setId(10);
+		q1.setCategory("Java");
+
+		Question q2 = new Question();
+		q2.setId(10);
+		q2.setCategory("C++");
+		int id = 10;
+		Mockito.when(service.upadteQuestion(id, q2)).thenReturn(q2);
+		ResponseEntity<Question> res = controller.updateRecord(id, q2);
+		Assertions.assertEquals(HttpStatus.CREATED, res.getStatusCode());
+
+	}
+	@DisplayName("Test updation by ID and question Fails" )
+	@Test
+	void testUpdationByIdQuestionFails() {
+		Question q1 = new Question();
+		q1.setId(10);
+		q1.setCategory("Java");
+
+		Question q2 = new Question();
+		q2.setId(10);
+		q2.setCategory("C++");
+		int id = 10;
+		Mockito.when(service.upadteQuestion(id, q2)).thenReturn(null);
+		ResponseEntity<Question> res = controller.updateRecord(id, q2);
+		Assertions.assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, res.getStatusCode());
+
+	}
 }
