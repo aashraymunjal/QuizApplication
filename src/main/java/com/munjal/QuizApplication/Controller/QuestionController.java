@@ -17,35 +17,65 @@ import com.munjal.QuizApplication.Model.Question;
 import com.munjal.QuizApplication.Service.QuestionService;
 
 @RestController
-@RequestMapping("question")
 public class QuestionController {
 
 	@Autowired
-	private QuestionService questionService;
+	QuestionService service;
 
-	@GetMapping("allQuestions")
+	@GetMapping("/allquestions")
 	public ResponseEntity<List<Question>> getAllQuestions() {
-		return questionService.getAllQuestions();
+		List<Question> list = service.getAllQuestions();
+		if (list.isEmpty()) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+		} else {
+			return new ResponseEntity<>(list, HttpStatus.OK);
+		}
 	}
 
 	@GetMapping("/category/{category}")
-	public ResponseEntity<List<Question>> getQuestionsByCategory(@PathVariable("category") String category) {
-		return questionService.getQuestionsByCategory(category);
+	public ResponseEntity<List<Question>> getQuestionByCat(@PathVariable("category") String category) {
+		List<Question> list = service.getQuestionByCat(category);
+		if (list.isEmpty()) {
+			return ResponseEntity.status(HttpStatus.OK).body(null);
+		} else {
+			return new ResponseEntity<>(list, HttpStatus.OK);
+		}
 	}
 
-	@PostMapping("/addQuestion")
-	public ResponseEntity<String> addQuestion(@RequestBody Question question) {
-		return questionService.addQuestion(question);
+	@PostMapping("/add")
+	public ResponseEntity<Question> addQuestion(@RequestBody Question question) {
+
+		if (question != null) {
+			Question saved = service.adQuestion(question);
+			return new ResponseEntity<>(saved, HttpStatus.CREATED);
+		} else {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+		}
+
 	}
 
 	@DeleteMapping("/delete/{id}")
-	public ResponseEntity<String> delete(@PathVariable("id") int id) {
-		return questionService.delete(id);
+	public ResponseEntity<String> deleteById(@PathVariable("id") int id) {
+		String res = service.deletebyid(id);
+
+		if (res.equals("Deleted")) {
+			return new ResponseEntity<>("Deletion Success", HttpStatus.OK);
+		} else {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("ID cannot be found");
+		}
 	}
 
 	@PutMapping("/update/{id}")
-	public ResponseEntity<Question> updateQuestion(@PathVariable("id") int id, @RequestBody Question question) {
-		return questionService.updateQuestion(id, question);
+	public ResponseEntity<Question> updateRecord(@PathVariable("id") int id, @RequestBody Question question) {
+
+		Question q1 = service.upadteQuestion(id, question);
+		if (q1 == null) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+		} else {
+			return new ResponseEntity<>(q1, HttpStatus.CREATED);
+		}
 
 	}
+
 }
+
